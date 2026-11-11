@@ -52,9 +52,7 @@ def bindable(port: int) -> bool:
 class Ports:
     """The numbers one run hands out: a cursor over a band of them, walking
     from a random start so two runs on one machine are unlikely to collide.
-
-    Instantiated once below. It is a class so the walking can be tested over
-    a band of three.
+    `free_port` uses the one instance below.
     """
 
     def __init__(self, first: int, last: int, start: int | None = None) -> None:

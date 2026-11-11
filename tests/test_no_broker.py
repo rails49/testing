@@ -29,5 +29,5 @@ def test_an_unset_looking_ci_still_skips(
 ) -> None:
     monkeypatch.setenv("CI", not_ci)
     with pytest.raises(BaseException) as raised:
-        no_broker("mosquitto would not start")
+        no_broker("no mosquitto installed")
     assert raised.type is pytest.skip.Exception

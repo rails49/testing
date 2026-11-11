@@ -5,8 +5,7 @@ Load the fixture with `pytest_plugins = ["rails49_testing.broker"]` in a
 
 Where no `mosquitto` is installed the `broker` fixture skips, so a machine
 without one still runs everything else. Under CI it fails instead, so a failed
-install reddens the gate rather than removing every test built on the broker.
-`CI` in the environment tells the two apart. A `mosquitto` that is installed
+install fails CI. `CI` in the environment tells the two apart. A `mosquitto` that is installed
 but will not start is an error everywhere.
 """
 
@@ -71,16 +70,16 @@ class Broker:
         self.process: subprocess.Popen[bytes] | None = None
         self._log_file: IO[bytes] | None = None
 
-    def start(self, timeout: float = 10.0) -> None:
+    def start(self) -> None:
         """Start it and return once it is listening. Raises `RuntimeError`
-        with the log if it exits or is not listening within `timeout`."""
+        with the log if it exits or is not listening within 10 seconds."""
         self._log_file = self.log.open("ab")
         self.process = process = subprocess.Popen(
             [self.binary, "-p", str(self.port)],
             stdout=self._log_file,
             stderr=self._log_file,
         )
-        deadline = time.monotonic() + timeout
+        deadline = time.monotonic() + 10
         while not listening(self.port):
             code = process.poll()
             if code is not None or time.monotonic() > deadline:

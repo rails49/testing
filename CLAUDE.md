@@ -1,6 +1,6 @@
 # testing
 
-gate: true
+gate: scripts/check.sh
 
 ## Agent skills
 
